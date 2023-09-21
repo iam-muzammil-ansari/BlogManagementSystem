@@ -1,7 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Login extends CI_Controller {
+class Login extends CI_Controller
+{
 
 	/**
 	 * Index Page for this controller.
@@ -19,25 +20,30 @@ class Login extends CI_Controller {
 	 * @see https://codeigniter.com/userguide3/general/urls.html
 	 */
 	public function index()
-{
-    $data = [];
-    if (isset($_SESSION['error'])) {
-        $data['error'] = $_SESSION['error'];
-    } else {
-        $data['error'] = "NO_ERROR";
-    }
-    
-    $this->load->view('adminpanel/loginview', $data);
-}
+	{
+		if (isset($_SESSION['user_id'])) {
+			redirect("admin/dashboard");
+		}
+
+		$data = [];
+		if (isset($_SESSION['error'])) {
+			$data['error'] = $_SESSION['error'];
+		} else {
+			$data['error'] = "NO_ERROR";
+		}
+
+		$this->load->view('adminpanel/loginview', $data);
+	}
 
 
-	public function login_post() {
+	public function login_post()
+	{
 		if (!empty($_POST)) {
 			$username = $_POST['username'];
 			$password = $_POST['password'];
-	
+
 			$query = $this->db->query("SELECT * FROM `backenduser` WHERE `username`='$username' AND `password`='$password'");
-	
+
 			if ($query->num_rows()) {
 				// Credentials are valid
 				$result = $query->result_array();
@@ -52,10 +58,11 @@ class Login extends CI_Controller {
 			die("Invalid Input!");
 		}
 	}
-	
 
-	function logout() {
+
+	function logout()
+	{
 		session_destroy();
+		redirect("admin/login");
 	}
-
 }
